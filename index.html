@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morgan & Sacha — Save the Date</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@300;400;500;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: #f5f5f0;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,245,240,0.9) 100%),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="1" fill="%23d4c5b5" opacity="0.3"/><circle cx="80" cy="40" r="1.5" fill="%23d4c5b5" opacity="0.2"/><circle cx="40" cy="80" r="1" fill="%23d4c5b5" opacity="0.3"/><circle cx="90" cy="90" r="1" fill="%23d4c5b5" opacity="0.2"/></svg>');
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 40px 20px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            right: 30px;
+            bottom: 30px;
+            border: 1px solid rgba(180, 160, 140, 0.4);
+            pointer-events: none;
+        }
+
+        .save-the-date {
+            font-family: 'Playfair Display', serif;
+            font-weight: 300;
+            font-size: 1.2rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: #8a7a6a;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease forwards;
+        }
+
+        .names {
+            font-family: 'Great Vibes', cursive;
+            font-size: 5rem;
+            color: #5a4a3a;
+            line-height: 1.1;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .names span {
+            display: block;
+            font-size: 3rem;
+            color: #8a7a6a;
+            margin-top: 10px;
+        }
+
+        .photo-frame {
+            width: 320px;
+            height: 420px;
+            background: #e8e0d8;
+            border-radius: 4px;
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.6s forwards;
+            overflow: hidden;
+        }
+
+        .photo-frame::after {
+            content: '❦';
+            font-size: 3rem;
+            color: #b8a898;
+        }
+
+        .photo-placeholder {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #9a8a7a;
+        }
+
+        .photo-placeholder svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .photo-placeholder p {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        /* Calendar Section */
+        .calendar-section {
+            background: #fff;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #8a7a6a;
+            margin-bottom: 30px;
+        }
+
+        .month-year {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: #5a4a3a;
+            margin-bottom: 40px;
+            letter-spacing: 3px;
+        }
+
+        .calendar {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .weekday {
+            font-family: 'Lato', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #8a7a6a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px;
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Lato', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #5a4a3a;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .day.empty {
+            background: transparent;
+        }
+
+        .day.weekend {
+            color: #c9a87c;
+        }
+
+        .day.highlighted {
+            background: #5a4a3a;
+            color: #fff;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(90, 74, 58, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .day:hover:not(.empty):not(.highlighted) {
+            background: #f0ebe5;
+        }
+
+        /* Venue Section */
+        .venue-section {
+            background: #f5f5f0;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .venue-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 500;
+            color: #5a4a3a;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .venue-address {
+            font-family: 'Lato', sans-serif;
+            font-size: 1rem;
+            color: #8a7a6a;
+            letter-spacing: 2px;
+            line-height: 1.8;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: #c9a87c;
+            margin: 30px auto;
+        }
+
+        .divider-large {
+            width: 120px;
+            height: 1px;
+            background: #c9a87c;
+            margin: 50px auto;
+        }
+
+        /* Countdown Section */
+        .countdown-section {
+            background: #5a4a3a;
+            padding: 80px 20px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .countdown-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            text-align: center;
+        }
+
+        .countdown-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .countdown-label {
+            font-family: 'Lato', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        /* RSVP Section */
+        .rsvp-section {
+            background: #fff;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .rsvp-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            color: #5a4a3a;
+            margin-bottom: 20px;
+        }
+
+        .rsvp-text {
+            font-family: 'Lato', sans-serif;
+            font-size: 1rem;
+            color: #8a7a6a;
+            max-width: 500px;
+            margin: 0 auto 40px;
+            line-height: 1.8;
+            letter-spacing: 1px;
+        }
+
+        .rsvp-button {
+            display: inline-block;
+            padding: 18px 50px;
+            background: #5a4a3a;
+            color: #fff;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            border: 2px solid #5a4a3a;
+        }
+
+        .rsvp-button:hover {
+            background: transparent;
+            color: #5a4a3a;
+        }
+
+        /* Footer */
+        .footer {
+            background: #f5f5f0;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2rem;
+            color: #8a7a6a;
+        }
+
+        .footer-date {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.9rem;
+            color: #b8a898;
+            letter-spacing: 3px;
+            margin-top: 10px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .names {
+                font-size: 3.5rem;
+            }
+            .names span {
+                font-size: 2.2rem;
+            }
+            .photo-frame {
+                width: 260px;
+                height: 340px;
+            }
+            .countdown {
+                gap: 20px;
+            }
+            .countdown-number {
+                font-size: 2.5rem;
+            }
+            .month-year {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="save-the-date">Save the Date</div>
+        <div class="names">
+            Morgan
+            <span>&</span>
+            Sacha
+        </div>
+        <div class="photo-frame">
+            <div class="photo-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <path d="M21 15l-5-5L5 21"/>
+                </svg>
+                <p>ВАШЕ ФОТО</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section class="calendar-section reveal">
+        <div class="section-title">Приглашаем вас отпраздновать с нами</div>
+        <div class="month-year">ИЮНЬ 2026</div>
+
+        <div class="calendar">
+            <div class="weekdays">
+                <div class="weekday">Пн</div>
+                <div class="weekday">Вт</div>
+                <div class="weekday">Ср</div>
+                <div class="weekday">Чт</div>
+                <div class="weekday">Пт</div>
+                <div class="weekday">Сб</div>
+                <div class="weekday">Вс</div>
+            </div>
+            <div class="days">
+                <div class="day">1</div>
+                <div class="day">2</div>
+                <div class="day">3</div>
+                <div class="day">4</div>
+                <div class="day">5</div>
+                <div class="day weekend">6</div>
+                <div class="day weekend">7</div>
+                <div class="day">8</div>
+                <div class="day">9</div>
+                <div class="day">10</div>
+                <div class="day">11</div>
+                <div class="day">12</div>
+                <div class="day weekend">13</div>
+                <div class="day weekend">14</div>
+                <div class="day">15</div>
+                <div class="day">16</div>
+                <div class="day">17</div>
+                <div class="day">18</div>
+                <div class="day">19</div>
+                <div class="day weekend">20</div>
+                <div class="day weekend">21</div>
+                <div class="day">22</div>
+                <div class="day">23</div>
+                <div class="day">24</div>
+                <div class="day">25</div>
+                <div class="day">26</div>
+                <div class="day weekend">27</div>
+                <div class="day weekend highlighted">28</div>
+                <div class="day">29</div>
+                <div class="day">30</div>
+                <div class="day empty"></div>
+                <div class="day empty"></div>
+                <div class="day empty"></div>
+                <div class="day empty"></div>
+                <div class="day empty"></div>
+            </div>
+        </div>
+
+        <div class="divider-large"></div>
+        <div style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #5a4a3a; letter-spacing: 3px;">
+            ВОСКРЕСЕНЬЕ, 28 ИЮНЯ 2026
+        </div>
+    </section>
+
+    <!-- Venue Section -->
+    <section class="venue-section reveal">
+        <div class="section-title">Место проведения</div>
+        <div class="venue-name">Borcelle Hotel</div>
+        <div class="divider"></div>
+        <div class="venue-address">
+            123 Anywhere St.<br>
+            Any City
+        </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section class="countdown-section reveal">
+        <div class="countdown-title">До нашей свадьбы осталось</div>
+        <div class="countdown" id="countdown">
+            <div class="countdown-item">
+                <div class="countdown-number" id="days">--</div>
+                <div class="countdown-label">Дней</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="hours">--</div>
+                <div class="countdown-label">Часов</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="minutes">--</div>
+                <div class="countdown-label">Минут</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="seconds">--</div>
+                <div class="countdown-label">Секунд</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section class="rsvp-section reveal">
+        <div class="rsvp-title">Подтвердите присутствие</div>
+        <div class="rsvp-text">
+            Мы будем счастливы разделить этот особенный день с вами.<br>
+            Пожалуйста, подтвердите ваше присутствие до 1 июня 2026 года.
+        </div>
+        <a href="#" class="rsvp-button" onclick="alert('Спасибо! Мы свяжемся с вами для подтверждения.'); return false;">
+            Ответить на приглашение
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-text">Morgan & Sacha</div>
+        <div class="footer-date">28.06.2026</div>
+    </footer>
+
+    <script>
+        // Countdown Timer
+        const weddingDate = new Date('2026-06-28T16:00:00');
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = weddingDate - now;
+
+            if (diff > 0) {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = String(days).padStart(2, '0');
+                document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            }
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Scroll Reveal
+        const reveals = document.querySelectorAll('.reveal');
+
+        function checkReveal() {
+            reveals.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                const elementVisible = 100;
+
+                if (elementTop < windowHeight - elementVisible) {
+                    el.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', checkReveal);
+        checkReveal();
+    </script>
+
+</body>
+</html>
